@@ -1,0 +1,1669 @@
+
+    <!DOCTYPE html>
+        <html prefix="
+    riskman: https://w3id.org/riskman/ontology#
+    dc: http://purl.org/dc/terms/
+    rdfs: http://www.w3.org/2000/01/rdf-schema#
+    rlevel: https://w3id.org/riskman/ontology#
+    schema: http://schema.org/">
+          <head>
+           <title>Device X risk management file</title>
+            <style>
+              :root {
+  --title-color: #222222;
+}
+html,
+body {
+  margin: 0;
+}
+/* Global font styling */
+body,
+button,
+input,
+select,
+textarea {
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.5;
+}
+
+thead {
+  background-color: #f0f0f0;
+}
+.rdf-block {
+  display: none;
+  visibility: hidden;
+}
+th,
+td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+  scroll-margin-top: 41px;
+}
+
+th:hover {
+  cursor: pointer;
+}
+
+tr:hover {
+  background-color: #f5f5f5;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+a {
+  color: #3559e0;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.controlled-risk-detail {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.controlled-risk-detail > div {
+  margin-bottom: 20px;
+}
+
+.block-title {
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.bold {
+  font-weight: bold;
+}
+.controlled-risk-detail {
+  border: 1px solid #ccc;
+  padding: 16px;
+  margin-bottom: 20px;
+  position: relative; /* So that we can use absolute positioning for the arrow */
+}
+
+.device-info {
+  margin-bottom: 15px;
+}
+
+.info {
+  display: flex;
+  gap: 5px;
+}
+
+.name {
+  font-weight: 600;
+  font-size: 1.2em;
+  margin: 14px 25px;
+}
+
+/* Basic Ant Design Card styles */
+.card {
+  background-color: #fff;
+  border-radius: 10px;
+  border: 1px solid #d1d1d1;
+  margin-bottom: 24px;
+  transition: all 0.3s;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.card:hover {
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card-body {
+  padding: 24px;
+}
+.card > h1 {
+  color: var(--title-color);
+}
+
+/* Custom style for your risk detail */
+.controlled-risk-detail h2 {
+  font-size: 1.5em;
+  margin-bottom: 16px;
+  margin-top: 30px !important;
+}
+
+.controlled-risk-detail {
+  background-color: #f0f0f0eb;
+  border-color: #bfc9d0;
+}
+
+.controlled-risk-detail:hover {
+  box-shadow: 0 5px 20px rgba(0, 145, 255, 0.059);
+}
+.controlled-risk-detail h3 {
+  font-size: 1.2em;
+  margin-bottom: 0;
+}
+.card-title {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #c7c7c7;
+  margin-bottom: 30px;
+}
+
+#floatingButton {
+  background-color: #fff;
+  border: 1px solid #4682a9;
+  margin-bottom: 24px;
+  transition: all 0.3s;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  color: #4682a9;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  text-align: center;
+  line-height: 50px; /* Vertically center the arrow */
+  font-size: 20px; /* Adjust size of the arrow */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.158);
+}
+#floatingButton:hover {
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.449);
+}
+
+.main-content {
+  flex: 1;
+  padding: 0px 0px 20px 20px;
+  flex-direction: column;
+  min-height: calc(100vh - 70px);
+}
+
+.layout {
+  display: flex;
+  height: 100vh;
+  padding-left: 260px;
+  overflow: hidden;
+}
+.info-icon {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  border: 2px solid #cfcfcf;
+  justify-content: center;
+  font-size: 12px;
+}
+.tooltip {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-10%);
+  margin-top: 5px;
+  padding: 5px 10px; /* Adjusted padding for better coverage */
+  border: 1px solid #ccc;
+  background-color: #fff;
+  white-space: nowrap;
+  min-width: 100px; /* Ensure tooltip has a minimum width */
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  font-size: 0.85em;
+  border-radius: 10px;
+}
+
+.info-icon:hover .tooltip {
+  display: block;
+}
+
+.sidebar {
+  flex: 0 0 250px;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 20px;
+  background-color: #f0f0f0;
+  border-right: 1px solid #b6b6b6;
+  position: fixed; /* Fixed positioning */
+  top: 0;
+  left: 0;
+}
+.sidebar h2 {
+  margin: 40px 0;
+}
+
+details {
+  font-family: 'Arial', sans-serif;
+  border: 1px solid #d1d1d1;
+  border-radius: 10px;
+  background-color: #ffffff;
+  padding: 10px;
+  margin-bottom: 20px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  width: 200px;
+}
+details a {
+  text-decoration: none;
+  color: #272727;
+  transition: color 0.3s;
+}
+
+details a:hover {
+  text-decoration: none;
+  font-weight: bold;
+  color: #0c0c0c;
+}
+summary {
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  outline: none;
+}
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+}
+
+ul li {
+  margin: 5px 0;
+}
+
+ul li a {
+  text-decoration: none;
+  color: #272727;
+  transition: color 0.3s;
+  font-size: 14px;
+}
+
+ul li a:hover {
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+details:hover {
+  background-color: #e7e7e7;
+  box-shadow: 0 5px 20px rgba(0, 145, 255, 0.059);
+}
+
+/* scroll bar styling  */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  transition: background-color 0.15s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+details[hide-arrow='true'] > summary {
+  list-style-type: none;
+  position: relative;
+}
+
+details[hide-arrow='true'] > summary::-webkit-details-marker {
+  display: none;
+}
+
+details[hide-arrow='true'] > summary:before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+}
+
+details[hide-arrow='true'] > summary {
+  padding-left: 0; /* adjust this value based on your needs */
+}
+
+.assuranceCard {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.cardHeader {
+  padding: 5px 10px;
+  font-weight: bold;
+  border-bottom: 1px solid #ccc;
+}
+
+.cardContent {
+  margin: 10px;
+}
+
+.assuranceCard:not(:first-child) {
+  margin-top: 10px; /* Adjust the margin-top value as needed */
+}
+
+.table-container {
+  max-height: 80%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  border: 1px solid #ccc;
+}
+
+.sticky-table-head {
+  position: sticky;
+  top: -2px;
+}
+
+.content-wrapper {
+  overflow-y: scroll;
+  height: calc(100% - 10%);
+  position: absolute;
+  top: 70px;
+  width: 96%;
+  padding: 2%;
+}
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background-color: #0068af;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-shadow: 0px 6px 20px 0px rgb(0 0 0 / 35%);
+}
+.header-content {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+.tabs {
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  flex-direction: row;
+}
+
+.tab {
+  color: white;
+  margin-right: 10px;
+}
+ul li a {
+  color: white;
+}
+
+.nested-tabs li a {
+  color: black;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-link .active {
+  color: black;
+}
+
+.active {
+  color: #36454f;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.nested-tabs-container {
+  margin-top: 20px;
+}
+
+.nested-tabs {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  border-bottom: 1px solid #ccc;
+}
+
+.nested-tabs li a {
+  text-decoration: none;
+  margin: 2px;
+  padding: 10px;
+  display: block;
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+
+  color: #333;
+}
+
+.nested-tabs li a.active,
+.nested-tabs li a:hover {
+  background-color: #ddd;
+  border-bottom: none;
+}
+
+.nested-tab-content {
+  border: 1px solid #ccc;
+  padding: 20px;
+  display: none;
+}
+
+.nested-tab-content:first-of-type {
+  border-top: none;
+}
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+.table-header h2 {
+  margin: 0;
+}
+
+.search-container {
+  /* Style for the search container, adjust as needed */
+}
+
+.search-container input[type='text'] {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 250px;
+}
+
+/*the model styling is heere */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  position: relative;
+  margin: 2% auto;
+  padding: 20px;
+  width: 80%;
+}
+
+.close {
+  position: absolute;
+  top: 35px;
+  right: 35px;
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 500;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.highlighted-row {
+  background-color: #ffd859cf;
+}
+
+
+            </style>
+          </head>
+          
+
+        <body>
+        <div class="header">
+        <h1>KIMEDS</h1>
+          <ul class="tabs">
+            <li class="tab"><a href="#" id="tab0" class="tab-link">Device information</a></li><li class="tab"><a href="#" id="tab1" class="tab-link">Controlled risks overview</a></li><li class="tab"><a href="#" id="tab2" class="tab-link">Risk management elements</a></li>
+          </ul>
+          </div>
+          <div class='content-wrapper'>
+          <div class="tab-content" id="content0"><div>
+  <div>
+    <div class="info"><p>Entity:</p><p class="name">Illuminati</p></div>
+    <div class="info"><p>Project:</p><p class="name">HOROSKOP</p></div>
+    <div class="info"><p>Version:</p><p class="name">VF10</p></div>
+    <div class="info"><p>Description:</p><p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p></div>
+
+  </div>
+</div></div><div class="tab-content" id="content1">
+  <div id="myModal" class="modal">
+      <div class="modal-content" id="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <p id="modal-details">Details will appear here...</p>
+      </div>
+    </div>
+
+    <div class="rdf-block">
+       
+      <div id="detail-MR1.1" class="card controlled-risk-detail" typeof=riskman:ControlledRisk about="#controlledRisk-MR1.1">
+        <div class="card-body" >
+          <h2>Controlled Risk : <span property="dc:identifier">MR1.1</span></h2>
+          
+  <div class="card">
+    <div class="card-body" property="riskman:hasAnalyzedRisk" typeof="riskman:AnalyzedRisk" >
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Analyzed Risk</h3>
+          <span class="info-icon" data-name="AnalyzedRisk">
+          ℹ️
+          <span class="tooltip">Combination of one or more domain-specific hazard(s) with one hazardous situation and one harm with reference to a device context and a specification of an initial risk level.</span>
+          </span>
+      </div>
+    
+      
+      <p><strong>Name: </strong><span property=rdfs:label>Protection from deterioration of patient's condition in the context of insufficient infusion during normal use caused by failing pump motor (0)</span></p>
+      
+  <div class="card">
+    <div class="card-body" property="riskman:hasDomainSpecificHazard" typeof="riskman:DSH" >
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Domain Specific Hazard</h3>
+          <span class="info-icon" data-name="DSH">
+          ℹ️
+          <span class="tooltip">Hazard associated with a specific hazardous situation, function and a specific device component.</span>
+          </span>
+      </div>
+    
+      
+      
+      
+  <div class="card">
+    <div class="card-body" property="riskman:hasDeviceFunction" typeof="riskman:DeviceFunction" resource=#->
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Device Function</h3>
+          <span class="info-icon" data-name="DeviceFunction">
+          ℹ️
+          <span class="tooltip">A specific functionality of a device related with the device specific hazard.</span>
+          </span>
+      </div>
+    
+      
+      <p><strong>Name: </strong><span property=rdfs:label>Hardware (0)</span></p>
+      
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body" property="riskman:hasHazard" typeof="riskman:Hazard" resource=#->
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Hazard</h3>
+          <span class="info-icon" data-name="Hazard">
+          ℹ️
+          <span class="tooltip">Potential source of harm</span>
+          </span>
+      </div>
+    
+      
+      <p><strong>Name: </strong><span property=rdfs:label>Mechanical Hazard (Physical Hazard) (1)</span></p>
+      
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body" property="riskman:hasHarm" typeof="riskman:Harm" resource=#->
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Harm</h3>
+          <span class="info-icon" data-name="Harm">
+          ℹ️
+          <span class="tooltip">Injury or damage to the health of people, or damage to property or the environment.</span>
+          </span>
+      </div>
+    
+      
+      <p><strong>Name: </strong><span property=rdfs:label>Deterioration of patient's condition (0)</span></p>
+      
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body" property="riskman:hasDeviceContext" typeof="riskman:DeviceContext" >
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Device Context</h3>
+          <span class="info-icon" data-name="DeviceContext">
+          ℹ️
+          <span class="tooltip">Information about possible environments the device can be used in that may affect probability or severity of some risk.</span>
+          </span>
+      </div>
+    
+      
+      <p><strong>Name: </strong><span property=rdfs:label>Normal use (0)</span></p>
+      
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body" property="riskman:hasHazardousSituation" typeof="riskman:HS" resource=#->
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Hazardous situation</h3>
+          <span class="info-icon" data-name="HS">
+          ℹ️
+          <span class="tooltip">Circumstance in which people, property or the environment is/are exposed to one or more hazards.</span>
+          </span>
+      </div>
+    
+      
+      <p><strong>Name: </strong><span property=rdfs:label>Pump stops infusion (1)</span></p>
+      
+  <div class="card">
+    <div class="card-body" property="riskman:hasPrecedingEvent" typeof="riskman:PrecedingEvent" >
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Preceding Event</h3>
+          <span class="info-icon" data-name="PrecedingEvent">
+          ℹ️
+          <span class="tooltip">A sequence of events leading to the hazardous situation</span>
+          </span>
+      </div>
+    
+      
+      
+      
+  <div class="card">
+    <div class="card-body" property="riskman:hasEvent" typeof="riskman:Event" resource=#->
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Event</h3>
+          <span class="info-icon" data-name="Event">
+          ℹ️
+          <span class="tooltip">An incidence or occurrence leading to another event and/or (eventually) a hazardous situation.</span>
+          </span>
+      </div>
+    
+      
+      <p><strong>Name: </strong><span property=rdfs:label>Pump motor fails; Pump unable to stroke (1)</span></p>
+      
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body" property="riskman:hasInitialRiskLevel" typeof="riskman:RiskLevel" >
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Initial Risk Level</h3>
+          <span class="info-icon" data-name="InitialRiskLevel">
+          ℹ️
+          <span class="tooltip">Combination of harm and its associated probability and severity.</span>
+          </span>
+      </div>
+    
+      
+      <p><strong>Probability: </strong><span property=riskman:hasProbability typeof=riskman:Probability>2</span></p><p><strong>Severity: </strong><span property=riskman:hasSeverity typeof=riskman:Severity>3</span></p>
+      
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+          
+  <div class="card">
+    <div class="card-body" property="riskman:isMitigatedBy" typeof="riskman:SDA" resource=#1>
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Is Mitigated By</h3>
+          <span class="info-icon" data-name="IsMitigatedBy">
+          ℹ️
+          <span class="tooltip">No reference found</span>
+          </span>
+      </div>
+    
+      <p><strong>ID:</strong>
+  <a href="#" onclick="switchToNestedTab('IsMitigatedBy','ismitigatedby-1') ">
+  <span property=dc:identifier>1</span></a></p>
+      <p><strong>Name: </strong><span property=rdfs:label>Insufficient infusion (0)</span></p><p property=rdfs:comment><strong>Description: </strong>-</p>
+      
+  <div class="card">
+    <div class="card-body" property="riskman:hasSubSDA" typeof="riskman:SDA" >
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Sub SDA</h3>
+          <span class="info-icon" data-name="SubSDA">
+          ℹ️
+          <span class="tooltip">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>
+          </span>
+      </div>
+    
+      
+      
+      
+  <div class="card">
+    <div class="card-body" property="riskman:" typeof="riskman:" resource=#2>
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">SDA</h3>
+          <span class="info-icon" data-name="SDA">
+          ℹ️
+          <span class="tooltip">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>
+          </span>
+      </div>
+    
+      <p><strong>ID:</strong>
+  <a href="#" onclick="switchToNestedTab('SDA','sda-2') ">
+  <span property=dc:identifier>2</span></a></p>
+      <p><strong>Name: </strong><span property=rdfs:label>Flow sensor (1)</span></p><p property=rdfs:comment><strong>Description: </strong>Integration of a flow sensor (0)</p>
+      
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body" property="riskman:hasSubSDA" typeof="riskman:SDA" >
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Sub SDA</h3>
+          <span class="info-icon" data-name="SubSDA">
+          ℹ️
+          <span class="tooltip">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>
+          </span>
+      </div>
+    
+      
+      
+      
+  <div class="card">
+    <div class="card-body" property="riskman:" typeof="riskman:" resource=#3>
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">SDA</h3>
+          <span class="info-icon" data-name="SDA">
+          ℹ️
+          <span class="tooltip">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>
+          </span>
+      </div>
+    
+      <p><strong>ID:</strong>
+  <a href="#" onclick="switchToNestedTab('SDA','sda-3') ">
+  <span property=dc:identifier>3</span></a></p>
+      <p><strong>Name: </strong><span property=rdfs:label>Implementation of watchdog timer (0)</span></p><p property=rdfs:comment><strong>Description: </strong>Each task involved in the pump delivery (or infusion) shall have a watchdog timer or counter associated with it to catch and stop run-away, or stalled processes (1)</p>
+      
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body" property="riskman:hasSubSDA" typeof="riskman:SDA" >
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Sub SDA</h3>
+          <span class="info-icon" data-name="SubSDA">
+          ℹ️
+          <span class="tooltip">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>
+          </span>
+      </div>
+    
+      
+      
+      
+  <div class="card">
+    <div class="card-body" property="riskman:" typeof="riskman:" resource=#4>
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">SDA</h3>
+          <span class="info-icon" data-name="SDA">
+          ℹ️
+          <span class="tooltip">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>
+          </span>
+      </div>
+    
+      <p><strong>ID:</strong>
+  <a href="#" onclick="switchToNestedTab('SDA','sda-4') ">
+  <span property=dc:identifier>4</span></a></p>
+      <p><strong>Name: </strong><span property=rdfs:label>Interruption of pump (0)</span></p><p property=rdfs:comment><strong>Description: </strong>The watchdog timer shall interrupt the pump if it ceases/suspends normal operation, or does not respond to user input for 90 seconds (1)</p>
+      
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body" property="riskman:hasImplementationManifest" typeof="riskman:ImplementationManifest" >
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Implementation Manifest</h3>
+          <span class="info-icon" data-name="ImplementationManifest">
+          ℹ️
+          <span class="tooltip">A concrete piece of objective evidence (or a reference to such) that an SDA has been implemented, e.g. reference to a line of code or a particular section in the device manual.</span>
+          </span>
+      </div>
+    
+      
+      <p><strong>Name: </strong>Interruption report (0)</p>
+      
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body" property="riskman:hasSubSDA" typeof="riskman:SDA" >
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Sub SDA</h3>
+          <span class="info-icon" data-name="SubSDA">
+          ℹ️
+          <span class="tooltip">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>
+          </span>
+      </div>
+    
+      
+      
+      
+  <div class="card">
+    <div class="card-body" property="riskman:" typeof="riskman:" resource=#5>
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">SDA</h3>
+          <span class="info-icon" data-name="SDA">
+          ℹ️
+          <span class="tooltip">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>
+          </span>
+      </div>
+    
+      <p><strong>ID:</strong>
+  <a href="#" onclick="switchToNestedTab('SDA','sda-5') ">
+  <span property=dc:identifier>5</span></a></p>
+      <p><strong>Name: </strong><span property=rdfs:label>Response check (0)</span></p><p property=rdfs:comment><strong>Description: </strong>The watchdog timer shall check that each of the other tasks has responded within the last 90 seconds (1)</p>
+      
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body" property="riskman:hasImplementationManifest" typeof="riskman:ImplementationManifest" >
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Implementation Manifest</h3>
+          <span class="info-icon" data-name="ImplementationManifest">
+          ℹ️
+          <span class="tooltip">A concrete piece of objective evidence (or a reference to such) that an SDA has been implemented, e.g. reference to a line of code or a particular section in the device manual.</span>
+          </span>
+      </div>
+    
+      
+      <p><strong>Name: </strong>Response report (0)</p>
+      
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body" property="riskman:hasSubSDA" typeof="riskman:SDA" >
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Sub SDA</h3>
+          <span class="info-icon" data-name="SubSDA">
+          ℹ️
+          <span class="tooltip">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>
+          </span>
+      </div>
+    
+      
+      
+      
+  <div class="card">
+    <div class="card-body" property="riskman:" typeof="riskman:" resource=#6>
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">SDA</h3>
+          <span class="info-icon" data-name="SDA">
+          ℹ️
+          <span class="tooltip">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>
+          </span>
+      </div>
+    
+      <p><strong>ID:</strong>
+  <a href="#" onclick="switchToNestedTab('SDA','sda-6') ">
+  <span property=dc:identifier>6</span></a></p>
+      <p><strong>Name: </strong><span property=rdfs:label>Alarm (0)</span></p><p property=rdfs:comment><strong>Description: </strong>If any task does not respond to a watchdog test for more than 3 minutes, a Watchdog alarm shall be raised (1)</p>
+      
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body" property="riskman:hasImplementationManifest" typeof="riskman:ImplementationManifest" >
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Implementation Manifest</h3>
+          <span class="info-icon" data-name="ImplementationManifest">
+          ℹ️
+          <span class="tooltip">A concrete piece of objective evidence (or a reference to such) that an SDA has been implemented, e.g. reference to a line of code or a particular section in the device manual.</span>
+          </span>
+      </div>
+    
+      
+      <p><strong>Name: </strong>Alarm report (0)</p>
+      
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body" property="riskman:hasSubSDA" typeof="riskman:SDA" >
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Sub SDA</h3>
+          <span class="info-icon" data-name="SubSDA">
+          ℹ️
+          <span class="tooltip">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>
+          </span>
+      </div>
+    
+      
+      
+      
+  <div class="card">
+    <div class="card-body" property="riskman:" typeof="riskman:" resource=#7>
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">SDA</h3>
+          <span class="info-icon" data-name="SDA">
+          ℹ️
+          <span class="tooltip">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>
+          </span>
+      </div>
+    
+      <p><strong>ID:</strong>
+  <a href="#" onclick="switchToNestedTab('SDA','sda-7') ">
+  <span property=dc:identifier>7</span></a></p>
+      <p><strong>Name: </strong><span property=rdfs:label>Test (0)</span></p><p property=rdfs:comment><strong>Description: </strong>A watchdog test shall be performed by calling a low-level driver and shall generate a Watchdog Test Failure alarm upon failure (1)</p>
+      
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body" property="riskman:hasImplementationManifest" typeof="riskman:ImplementationManifest" >
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Implementation Manifest</h3>
+          <span class="info-icon" data-name="ImplementationManifest">
+          ℹ️
+          <span class="tooltip">A concrete piece of objective evidence (or a reference to such) that an SDA has been implemented, e.g. reference to a line of code or a particular section in the device manual.</span>
+          </span>
+      </div>
+    
+      
+      <p><strong>Name: </strong>Test report (0)</p>
+      
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body" property="riskman:hasSubSDA" typeof="riskman:SDA" >
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Sub SDA</h3>
+          <span class="info-icon" data-name="SubSDA">
+          ℹ️
+          <span class="tooltip">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>
+          </span>
+      </div>
+    
+      
+      
+      
+  <div class="card">
+    <div class="card-body" property="riskman:" typeof="riskman:" resource=#->
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">SDA</h3>
+          <span class="info-icon" data-name="SDA">
+          ℹ️
+          <span class="tooltip">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>
+          </span>
+      </div>
+    
+      
+      <p><strong>Name: </strong><span property=rdfs:label>Conformity to IEC 60601-2-24 (0)</span></p><p property=rdfs:comment><strong>Description: </strong>The pump shall be developed such that the basic safety and essential performance requirements, specified in IEC 60601-2-24, are met (0)</p>
+      
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body" property="riskman:hasSafetyAssurance" typeof="riskman:SafetyAssurance" resource=#->
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Safety Assurance</h3>
+          <span class="info-icon" data-name="SafetyAssurance">
+          ℹ️
+          <span class="tooltip">A credible reference (or list of such) to the state of the art of achieving safety with respect to a certain class of hazards, e.g. referring to an international norm such as ISO 60601.</span>
+          </span>
+      </div>
+    
+      
+      <p><strong>Name: </strong><span property=rdfs:label>IEC 60601-2-24 (0)</span></p>
+      
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body" property="riskman:hasImplementationManifest" typeof="riskman:ImplementationManifest" resource=#->
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Implementation Manifest</h3>
+          <span class="info-icon" data-name="ImplementationManifest">
+          ℹ️
+          <span class="tooltip">A concrete piece of objective evidence (or a reference to such) that an SDA has been implemented, e.g. reference to a line of code or a particular section in the device manual.</span>
+          </span>
+      </div>
+    
+      
+      <p><strong>Name: </strong><span property=rdfs:label>Instructions for use (0)</span></p>
+      
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+    </div>
+  </div>
+
+          
+  <div class="card">
+    <div class="card-body" property="riskman:hasResidualRiskLevel" typeof="riskman:RiskLevel" >
+      
+    <div class="card-title" >
+          <h3 style="margin-right: 10px;">Residual Risk</h3>
+          <span class="info-icon" data-name="ResidualRisk">
+          ℹ️
+          <span class="tooltip">The original, mitigated risk with lowered value(s) of probability and/or severity.</span>
+          </span>
+      </div>
+    
+      
+      <p><strong>Probability: </strong><span property=riskman:hasProbability typeof=riskman:Probability>1</span></p><p><strong>Severity: </strong><span property=riskman:hasSeverity typeof=riskman:Severity>3</span></p>
+      
+    </div>
+  </div>
+
+        </div>
+      </div>
+    
+    </div>
+
+ <div class="table-header">
+   <h2 id="main-table" id='top-controlled-risk'>Controlled risks</h2>
+   <div class="search-container">
+   <input type="text" data-table-id="controlled-risks-table" placeholder="Search...">
+   </div>
+ </div>
+   <div class="table-container">
+     <table id="controlled-risks-table">
+       <thead class="sticky-table-head">
+         <tr>
+           <th>Controlled risk</th>
+           <th>Domain Specific Hazard</th>
+           <th>Initial risk level</th>
+           <th>Mitigated by</th>
+           <th>Residual Risk level</th>
+         </tr>
+       </thead>
+       <tbody id="tableBody">
+         
+				 <tr id="row-MR1.1" >
+         <td><a onclick="showModal('MR1.1')"> MR1.1-Protection from deterioration of patient's condition in the context of insufficient infusion during normal use caused by failing pump motor (0)</a></td>
+					  <td>
+    <div class="device-info">
+      <p><strong>Device function:</strong> Hardware (0)</p>
+      <p><strong>Hazard:</strong> Mechanical Hazard (Physical Hazard) (1)</p>
+      -
+      <p><a href="#" onclick="switchToNestedTab('DSH','dsh-[object Object]')">View Details</a></p>
+    </div>
+  </td>
+					  <td>
+			<div class="device-info">
+				 <p><strong>Severity:</strong> 3</p>
+				 <p><strong>Probability:</strong> 2</p>
+				 <p><strong>Acceptance:</strong> Yes</p>
+		  </div>
+	  </td>
+					  <td>
+			 <div class="device-info">
+				  <p><a href="#" onclick="switchToNestedTab('RiskSDA','RiskSDA-Insufficient infusion (0)')"> Insufficient infusion (0)</a></p>
+			</div>
+		</td>
+					  <td>
+    <div class="device-info">
+			<p><strong>Severity:</strong> 3</p>
+			<p><strong>Probability:</strong> 1</p>
+				 <p><strong>Acceptance:</strong> Yes</p>
+		</div>
+  </td>
+				 </tr>
+			
+       </tbody>
+     </table>
+   </div>
+
+  </div><div class="tab-content" id="content2">
+      <div class="nested-tabs-container">
+        <ul class="nested-tabs"><li class="nested-tab"><a href="#" id="nestedTab0" class="nested-tab-link">Domain Specific Hazards</a></li><li class="nested-tab"><a href="#" id="nestedTab1" class="nested-tab-link">Hazard</a></li><li class="nested-tab"><a href="#" id="nestedTab2" class="nested-tab-link">Device Function</a></li><li class="nested-tab"><a href="#" id="nestedTab3" class="nested-tab-link">Device Component</a></li><li class="nested-tab"><a href="#" id="nestedTab4" class="nested-tab-link">Hazardous Situation</a></li><li class="nested-tab"><a href="#" id="nestedTab5" class="nested-tab-link">Event</a></li><li class="nested-tab"><a href="#" id="nestedTab6" class="nested-tab-link">Harm</a></li><li class="nested-tab"><a href="#" id="nestedTab7" class="nested-tab-link">Device Context</a></li><li class="nested-tab"><a href="#" id="nestedTab8" class="nested-tab-link">Risk Sdas</a></li><li class="nested-tab"><a href="#" id="nestedTab9" class="nested-tab-link">Assurance Sdas</a></li><li class="nested-tab"><a href="#" id="nestedTab10" class="nested-tab-link">Safety Assurance</a></li><li class="nested-tab"><a href="#" id="nestedTab11" class="nested-tab-link">Implementation Manifest</a></li></ul>
+        <div class="nested-tabs-content"><div class="nested-tab-content" id="nestedContent0">
+          <div class="table-header">
+            <h2 id="dsh-table">Domain Specific Hazards</h2>
+            <div class="search-container">
+              <input type="text" data-table-id="dsh-table" placeholder="Search...">
+            </div>
+          </div>
+        <div class="table-container">
+        <table id="dsh-table">
+            <thead class="sticky-table-head">
+                <tr>
+                    <th>Device Function</th><th>Hazard</th><th>Device Component</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            <tr id="dsh-">
+                
+                <td> <a href="#" onclick="switchToNestedTab('DeviceFunction','deviceFunction-Hardware (0)')">Hardware (0)</a></td><td> <a href="#" onclick="switchToNestedTab('Hazard','hazard-Mechanical Hazard (Physical Hazard) (1)')">Mechanical Hazard (Physical Hazard) (1)</a></td><td><div></div></td>
+            </tr>
+        
+            </tbody>
+        </table>
+        </div>
+     </div><div class="nested-tab-content" id="nestedContent1">
+          <div class="table-header">
+            <h2 id="hazard-table">Hazards</h2>
+            <div class="search-container">
+              <input type="text" data-table-id="hazard-table" placeholder="Search...">
+            </div>
+          </div>
+        <div class="table-container">
+        <table id="hazard-table">
+            <thead class="sticky-table-head">
+                <tr>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            <tr id="hazard-Mechanical Hazard (Physical Hazard) (1)">
+                
+                <td>Mechanical Hazard (Physical Hazard) (1)</td>
+            </tr>
+        
+            </tbody>
+        </table>
+        </div>
+     </div><div class="nested-tab-content" id="nestedContent2">
+          <div class="table-header">
+            <h2 id="deviceFunction-table">Device Functions</h2>
+            <div class="search-container">
+              <input type="text" data-table-id="deviceFunction-table" placeholder="Search...">
+            </div>
+          </div>
+        <div class="table-container">
+        <table id="deviceFunction-table">
+            <thead class="sticky-table-head">
+                <tr>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            <tr id="deviceFunction-Hardware (0)">
+                
+                <td>Hardware (0)</td>
+            </tr>
+        
+            </tbody>
+        </table>
+        </div>
+     </div><div class="nested-tab-content" id="nestedContent3">
+        <h2 id="deviceComponent-table">Device Components</h2>
+        <div>
+       <p>No Device Components</p>
+        </div>
+    </div><div class="nested-tab-content" id="nestedContent4">
+          <div class="table-header">
+            <h2 id="hs-table">Hazardous situations</h2>
+            <div class="search-container">
+              <input type="text" data-table-id="hs-table" placeholder="Search...">
+            </div>
+          </div>
+        <div class="table-container">
+        <table id="hs-table">
+            <thead class="sticky-table-head">
+                <tr>
+                    <th>Name</th><th>Sequence of events</th><th>Probability</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            <tr id="hs-Pump stops infusion (1)">
+                
+                <td>Pump stops infusion (1)</td><td><div><a href="#" onclick="switchToNestedTab('Event','event-Pump motor fails; Pump unable to stroke (1)')"> Pump motor fails; Pump unable to stroke (1)</a></div></td><td></td>
+            </tr>
+        
+            </tbody>
+        </table>
+        </div>
+     </div><div class="nested-tab-content" id="nestedContent5">
+          <div class="table-header">
+            <h2 id="event-table">Events</h2>
+            <div class="search-container">
+              <input type="text" data-table-id="event-table" placeholder="Search...">
+            </div>
+          </div>
+        <div class="table-container">
+        <table id="event-table">
+            <thead class="sticky-table-head">
+                <tr>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            <tr id="event-Pump motor fails; Pump unable to stroke (1)">
+                
+                <td>Pump motor fails; Pump unable to stroke (1)</td>
+            </tr>
+        
+            </tbody>
+        </table>
+        </div>
+     </div><div class="nested-tab-content" id="nestedContent6">
+          <div class="table-header">
+            <h2 id="harm-table">Harms</h2>
+            <div class="search-container">
+              <input type="text" data-table-id="harm-table" placeholder="Search...">
+            </div>
+          </div>
+        <div class="table-container">
+        <table id="harm-table">
+            <thead class="sticky-table-head">
+                <tr>
+                    <th>Name</th><th>Probability</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            <tr id="harm-Deterioration of patient's condition (0)">
+                
+                <td>Deterioration of patient's condition (0)</td><td></td>
+            </tr>
+        
+            </tbody>
+        </table>
+        </div>
+     </div><div class="nested-tab-content" id="nestedContent7">
+          <div class="table-header">
+            <h2 id="context-table">Device Context</h2>
+            <div class="search-container">
+              <input type="text" data-table-id="context-table" placeholder="Search...">
+            </div>
+          </div>
+        <div class="table-container">
+        <table id="context-table">
+            <thead class="sticky-table-head">
+                <tr>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            <tr id="context-Normal use (0)">
+                
+                <td>Normal use (0)</td>
+            </tr>
+        
+            </tbody>
+        </table>
+        </div>
+     </div><div class="nested-tab-content" id="nestedContent8">
+          <div class="table-header">
+            <h2 id="risk-table">Risk SDAs</h2>
+            <div class="search-container">
+              <input type="text" data-table-id="risk-table" placeholder="Search...">
+            </div>
+          </div>
+        <div class="table-container">
+        <table id="risk-table">
+            <thead class="sticky-table-head">
+                <tr>
+                    <th>ID</th><th>Name</th><th>Description</th><th>Sub Risk SDAs</th><th>Assurance SDAs</th><th>Implementation manifest</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            <tr id="RiskSDA-Interruption of pump (0)">
+                <td>4</td>
+                <td>Interruption of pump (0)</td><td>The watchdog timer shall interrupt the pump if it ceases/suspends normal operation, or does not respond to user input for 90 seconds (1)</td><td><div></div></td><td><div></div></td><td><div ><a href="#" onclick="switchToNestedTab('ImplementationManifest','implementationmanifest-Interruption report (0)')">Interruption report (0)</a></div ></td>
+            </tr>
+        
+            <tr id="RiskSDA-Response check (0)">
+                <td>5</td>
+                <td>Response check (0)</td><td>The watchdog timer shall check that each of the other tasks has responded within the last 90 seconds (1)</td><td><div></div></td><td><div></div></td><td><div ><a href="#" onclick="switchToNestedTab('ImplementationManifest','implementationmanifest-Response report (0)')">Response report (0)</a></div ></td>
+            </tr>
+        
+            <tr id="RiskSDA-Alarm (0)">
+                <td>6</td>
+                <td>Alarm (0)</td><td>If any task does not respond to a watchdog test for more than 3 minutes, a Watchdog alarm shall be raised (1)</td><td><div></div></td><td><div></div></td><td><div ><a href="#" onclick="switchToNestedTab('ImplementationManifest','implementationmanifest-Alarm report (0)')">Alarm report (0)</a></div ></td>
+            </tr>
+        
+            <tr id="RiskSDA-Test (0)">
+                <td>7</td>
+                <td>Test (0)</td><td>A watchdog test shall be performed by calling a low-level driver and shall generate a Watchdog Test Failure alarm upon failure (1)</td><td><div></div></td><td><div></div></td><td><div ><a href="#" onclick="switchToNestedTab('ImplementationManifest','implementationmanifest-Test report (0)')">Test report (0)</a></div ></td>
+            </tr>
+        
+            <tr id="RiskSDA-Implementation of watchdog timer (0)">
+                <td>3</td>
+                <td>Implementation of watchdog timer (0)</td><td>Each task involved in the pump delivery (or infusion) shall have a watchdog timer or counter associated with it to catch and stop run-away, or stalled processes (1)</td><td><div><a href="#" onclick="highlightElementInTab('RiskSDA-Interruption of pump (0)')"> Interruption of pump (0)</a>,<a href="#" onclick="highlightElementInTab('RiskSDA-Response check (0)')"> Response check (0)</a>,<a href="#" onclick="highlightElementInTab('RiskSDA-Alarm (0)')"> Alarm (0)</a>,<a href="#" onclick="highlightElementInTab('RiskSDA-Test (0)')"> Test (0)</a></div></td><td><div></div></td><td><div ><a href="#" onclick="switchToNestedTab('ImplementationManifest','implementationmanifest-')"></a></div ></td>
+            </tr>
+        
+            <tr id="RiskSDA-Flow sensor (1)">
+                <td>2</td>
+                <td>Flow sensor (1)</td><td>Integration of a flow sensor (0)</td><td><div><a href="#" onclick="highlightElementInTab('RiskSDA-Implementation of watchdog timer (0)')"> Implementation of watchdog timer (0)</a></div></td><td><div></div></td><td><div ><a href="#" onclick="switchToNestedTab('ImplementationManifest','implementationmanifest-')"></a></div ></td>
+            </tr>
+        
+            <tr id="RiskSDA-Insufficient infusion (0)">
+                <td>1</td>
+                <td>Insufficient infusion (0)</td><td></td><td><div><a href="#" onclick="highlightElementInTab('RiskSDA-Flow sensor (1)')"> Flow sensor (1)</a></div></td><td><div><a href="#" onclick="switchToNestedTab('SubAssuranceSDA','assuranceSDA-Conformity to IEC 60601-2-24 (0)')"> Conformity to IEC 60601-2-24 (0)</a></div></td><td><div ><a href="#" onclick="switchToNestedTab('ImplementationManifest','implementationmanifest-')"></a></div ></td>
+            </tr>
+        
+            </tbody>
+        </table>
+        </div>
+     </div><div class="nested-tab-content" id="nestedContent9">
+          <div class="table-header">
+            <h2 id="assuranceSDA-table">Assurance SDAs</h2>
+            <div class="search-container">
+              <input type="text" data-table-id="assuranceSDA-table" placeholder="Search...">
+            </div>
+          </div>
+        <div class="table-container">
+        <table id="assuranceSDA-table">
+            <thead class="sticky-table-head">
+                <tr>
+                    <th>Name</th><th>Description</th><th>Sub Assurance SDAs</th><th>Safety assurance</th><th>Implementation manifest</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            <tr id="assuranceSDA-Conformity to IEC 60601-2-24 (0)">
+                
+                <td>Conformity to IEC 60601-2-24 (0)</td><td>The pump shall be developed such that the basic safety and essential performance requirements, specified in IEC 60601-2-24, are met (0)</td><td><div></div></td><td><div >
+        <a href="#" onclick="switchToNestedTab('SafetyAssurance','safetyAssurance-IEC 60601-2-24 (0)')">IEC 60601-2-24 (0)</a>
+    </div></td><td><div >
+        <a href="#" onclick="switchToNestedTab('ImplementationManifest','implementationmanifest-Instructions for use (0)')">Instructions for use (0)</a>
+        </div></td>
+            </tr>
+        
+            </tbody>
+        </table>
+        </div>
+     </div><div class="nested-tab-content" id="nestedContent10">
+          <div class="table-header">
+            <h2 id="safetyAssurance-table">Safety assurances</h2>
+            <div class="search-container">
+              <input type="text" data-table-id="safetyAssurance-table" placeholder="Search...">
+            </div>
+          </div>
+        <div class="table-container">
+        <table id="safetyAssurance-table">
+            <thead class="sticky-table-head">
+                <tr>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            <tr id="safetyAssurance-IEC 60601-2-24 (0)">
+                
+                <td>IEC 60601-2-24 (0)</td>
+            </tr>
+        
+            </tbody>
+        </table>
+        </div>
+     </div><div class="nested-tab-content" id="nestedContent11">
+          <div class="table-header">
+            <h2 id="manifest-table">Implementation manifests</h2>
+            <div class="search-container">
+              <input type="text" data-table-id="manifest-table" placeholder="Search...">
+            </div>
+          </div>
+        <div class="table-container">
+        <table id="manifest-table">
+            <thead class="sticky-table-head">
+                <tr>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            <tr id="implementationmanifest-Interruption report (0)">
+                
+                <td>Interruption report (0)</td>
+            </tr>
+        
+            <tr id="implementationmanifest-Response report (0)">
+                
+                <td>Response report (0)</td>
+            </tr>
+        
+            <tr id="implementationmanifest-Alarm report (0)">
+                
+                <td>Alarm report (0)</td>
+            </tr>
+        
+            <tr id="implementationmanifest-Test report (0)">
+                
+                <td>Test report (0)</td>
+            </tr>
+        
+            <tr id="implementationmanifest-Instructions for use (0)">
+                
+                <td>Instructions for use (0)</td>
+            </tr>
+        
+            </tbody>
+        </table>
+        </div>
+     </div></div>
+      </div>
+    </div>
+         </div>
+         <script>
+            const tabs = document.querySelectorAll('.tabs li a');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            const setupNestedTabs = () => {
+            const nestedTabs = document.querySelectorAll('.nested-tabs li a');
+            const nestedTabContents = document.querySelectorAll('.nested-tab-content');
+
+            nestedTabs.forEach((nestedTab, nestedIndex) => {
+                nestedTab.addEventListener('click', (nestedEvent) => {
+                nestedEvent.preventDefault();
+                deleteAllHighlightings();
+                nestedTabContents.forEach(content => content.style.display = 'none');
+                nestedTabs.forEach(tab => tab.classList.remove('active'));
+                document.getElementById(`nestedContent${nestedIndex}`).style.display = 'block';
+                nestedEvent.target.classList.add('active');
+                });
+            });
+
+            // Preselect the first nested tab
+            if (nestedTabContents.length > 0) {
+                nestedTabContents.forEach(content => content.style.display = 'none');
+                nestedTabContents[0].style.display = 'block';
+                nestedTabs.forEach(tab => tab.classList.remove('active'));
+                nestedTabs[0].classList.add('active');
+            }
+            };
+
+            tabs.forEach((tab, index) => {
+            tab.addEventListener('click', (event) => {
+                event.preventDefault();
+                deleteAllHighlightings()
+                closeModal()
+                tabContents.forEach(content => content.style.display = 'none');
+                tabs.forEach(tab => tab.classList.remove('active'));
+                document.getElementById(`content${index}`).style.display = 'block';
+                event.target.classList.add('active');
+                setupNestedTabs(); // Setup nested tabs on each main tab click
+            });
+            });
+
+            // Initialize tabs on page load
+            document.getElementById('content0').style.display = 'block';
+            document.getElementById('tab0').classList.add('active');
+            setupNestedTabs(); // Initial setup of nested tabs
+
+            // Global search functionality
+            document.addEventListener('DOMContentLoaded', function () {
+              // Find all search inputs
+              const searchInputs = document.querySelectorAll('.search-container input[type="text"]');
+
+              searchInputs.forEach(function (searchInput) {
+                const tableId = searchInput.getAttribute('data-table-id');
+                const tableBody = document.querySelector(`#${tableId} tbody`);
+
+                searchInput.addEventListener('keyup', function () {
+                  const searchValue = searchInput.value.toLowerCase();
+
+                  Array.from(tableBody.getElementsByTagName('tr')).forEach(function (row) {
+                    let isVisible = Array.from(row.getElementsByTagName('td')).some(function (cell) {
+                      return cell.textContent.toLowerCase().indexOf(searchValue) > -1;
+                    });
+
+                    row.style.display = isVisible ? '' : 'none';
+                  });
+                });
+              });
+            });
+            
+  const detailsArray = {"MR1.1":"\n      <div id=\"detail-MR1.1\" class=\"card controlled-risk-detail\" typeof=riskman:ControlledRisk about=\"#controlledRisk-MR1.1\">\n        <div class=\"card-body\" >\n          <h2>Controlled Risk : <span property=\"dc:identifier\">MR1.1</span></h2>\n          \n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasAnalyzedRisk\" typeof=\"riskman:AnalyzedRisk\" >\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Analyzed Risk</h3>\n          <span class=\"info-icon\" data-name=\"AnalyzedRisk\">\n          ℹ️\n          <span class=\"tooltip\">Combination of one or more domain-specific hazard(s) with one hazardous situation and one harm with reference to a device context and a specification of an initial risk level.</span>\n          </span>\n      </div>\n    \n      \n      <p><strong>Name: </strong><span property=rdfs:label>Protection from deterioration of patient's condition in the context of insufficient infusion during normal use caused by failing pump motor (0)</span></p>\n      \n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasDomainSpecificHazard\" typeof=\"riskman:DSH\" >\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Domain Specific Hazard</h3>\n          <span class=\"info-icon\" data-name=\"DSH\">\n          ℹ️\n          <span class=\"tooltip\">Hazard associated with a specific hazardous situation, function and a specific device component.</span>\n          </span>\n      </div>\n    \n      \n      \n      \n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasDeviceFunction\" typeof=\"riskman:DeviceFunction\" resource=#->\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Device Function</h3>\n          <span class=\"info-icon\" data-name=\"DeviceFunction\">\n          ℹ️\n          <span class=\"tooltip\">A specific functionality of a device related with the device specific hazard.</span>\n          </span>\n      </div>\n    \n      \n      <p><strong>Name: </strong><span property=rdfs:label>Hardware (0)</span></p>\n      \n    </div>\n  </div>\n\n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasHazard\" typeof=\"riskman:Hazard\" resource=#->\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Hazard</h3>\n          <span class=\"info-icon\" data-name=\"Hazard\">\n          ℹ️\n          <span class=\"tooltip\">Potential source of harm</span>\n          </span>\n      </div>\n    \n      \n      <p><strong>Name: </strong><span property=rdfs:label>Mechanical Hazard (Physical Hazard) (1)</span></p>\n      \n    </div>\n  </div>\n\n    </div>\n  </div>\n\n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasHarm\" typeof=\"riskman:Harm\" resource=#->\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Harm</h3>\n          <span class=\"info-icon\" data-name=\"Harm\">\n          ℹ️\n          <span class=\"tooltip\">Injury or damage to the health of people, or damage to property or the environment.</span>\n          </span>\n      </div>\n    \n      \n      <p><strong>Name: </strong><span property=rdfs:label>Deterioration of patient's condition (0)</span></p>\n      \n    </div>\n  </div>\n\n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasDeviceContext\" typeof=\"riskman:DeviceContext\" >\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Device Context</h3>\n          <span class=\"info-icon\" data-name=\"DeviceContext\">\n          ℹ️\n          <span class=\"tooltip\">Information about possible environments the device can be used in that may affect probability or severity of some risk.</span>\n          </span>\n      </div>\n    \n      \n      <p><strong>Name: </strong><span property=rdfs:label>Normal use (0)</span></p>\n      \n    </div>\n  </div>\n\n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasHazardousSituation\" typeof=\"riskman:HS\" resource=#->\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Hazardous situation</h3>\n          <span class=\"info-icon\" data-name=\"HS\">\n          ℹ️\n          <span class=\"tooltip\">Circumstance in which people, property or the environment is/are exposed to one or more hazards.</span>\n          </span>\n      </div>\n    \n      \n      <p><strong>Name: </strong><span property=rdfs:label>Pump stops infusion (1)</span></p>\n      \n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasPrecedingEvent\" typeof=\"riskman:PrecedingEvent\" >\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Preceding Event</h3>\n          <span class=\"info-icon\" data-name=\"PrecedingEvent\">\n          ℹ️\n          <span class=\"tooltip\">A sequence of events leading to the hazardous situation</span>\n          </span>\n      </div>\n    \n      \n      \n      \n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasEvent\" typeof=\"riskman:Event\" resource=#->\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Event</h3>\n          <span class=\"info-icon\" data-name=\"Event\">\n          ℹ️\n          <span class=\"tooltip\">An incidence or occurrence leading to another event and/or (eventually) a hazardous situation.</span>\n          </span>\n      </div>\n    \n      \n      <p><strong>Name: </strong><span property=rdfs:label>Pump motor fails; Pump unable to stroke (1)</span></p>\n      \n    </div>\n  </div>\n\n    </div>\n  </div>\n\n    </div>\n  </div>\n\n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasInitialRiskLevel\" typeof=\"riskman:RiskLevel\" >\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Initial Risk Level</h3>\n          <span class=\"info-icon\" data-name=\"InitialRiskLevel\">\n          ℹ️\n          <span class=\"tooltip\">Combination of harm and its associated probability and severity.</span>\n          </span>\n      </div>\n    \n      \n      <p><strong>Probability: </strong><span property=riskman:hasProbability typeof=riskman:Probability>2</span></p><p><strong>Severity: </strong><span property=riskman:hasSeverity typeof=riskman:Severity>3</span></p>\n      \n    </div>\n  </div>\n\n    </div>\n  </div>\n\n          \n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:isMitigatedBy\" typeof=\"riskman:SDA\" resource=#1>\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Is Mitigated By</h3>\n          <span class=\"info-icon\" data-name=\"IsMitigatedBy\">\n          ℹ️\n          <span class=\"tooltip\">No reference found</span>\n          </span>\n      </div>\n    \n      <p><strong>ID:</strong>\n  <a href=\"#\" onclick=\"switchToNestedTab('IsMitigatedBy','ismitigatedby-1') \">\n  <span property=dc:identifier>1</span></a></p>\n      <p><strong>Name: </strong><span property=rdfs:label>Insufficient infusion (0)</span></p><p property=rdfs:comment><strong>Description: </strong>-</p>\n      \n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasSubSDA\" typeof=\"riskman:SDA\" >\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Sub SDA</h3>\n          <span class=\"info-icon\" data-name=\"SubSDA\">\n          ℹ️\n          <span class=\"tooltip\">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>\n          </span>\n      </div>\n    \n      \n      \n      \n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:\" typeof=\"riskman:\" resource=#2>\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">SDA</h3>\n          <span class=\"info-icon\" data-name=\"SDA\">\n          ℹ️\n          <span class=\"tooltip\">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>\n          </span>\n      </div>\n    \n      <p><strong>ID:</strong>\n  <a href=\"#\" onclick=\"switchToNestedTab('SDA','sda-2') \">\n  <span property=dc:identifier>2</span></a></p>\n      <p><strong>Name: </strong><span property=rdfs:label>Flow sensor (1)</span></p><p property=rdfs:comment><strong>Description: </strong>Integration of a flow sensor (0)</p>\n      \n    </div>\n  </div>\n\n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasSubSDA\" typeof=\"riskman:SDA\" >\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Sub SDA</h3>\n          <span class=\"info-icon\" data-name=\"SubSDA\">\n          ℹ️\n          <span class=\"tooltip\">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>\n          </span>\n      </div>\n    \n      \n      \n      \n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:\" typeof=\"riskman:\" resource=#3>\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">SDA</h3>\n          <span class=\"info-icon\" data-name=\"SDA\">\n          ℹ️\n          <span class=\"tooltip\">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>\n          </span>\n      </div>\n    \n      <p><strong>ID:</strong>\n  <a href=\"#\" onclick=\"switchToNestedTab('SDA','sda-3') \">\n  <span property=dc:identifier>3</span></a></p>\n      <p><strong>Name: </strong><span property=rdfs:label>Implementation of watchdog timer (0)</span></p><p property=rdfs:comment><strong>Description: </strong>Each task involved in the pump delivery (or infusion) shall have a watchdog timer or counter asso\u0002ciated with it to catch and stop run-away, or stalled processes (1)</p>\n      \n    </div>\n  </div>\n\n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasSubSDA\" typeof=\"riskman:SDA\" >\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Sub SDA</h3>\n          <span class=\"info-icon\" data-name=\"SubSDA\">\n          ℹ️\n          <span class=\"tooltip\">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>\n          </span>\n      </div>\n    \n      \n      \n      \n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:\" typeof=\"riskman:\" resource=#4>\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">SDA</h3>\n          <span class=\"info-icon\" data-name=\"SDA\">\n          ℹ️\n          <span class=\"tooltip\">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>\n          </span>\n      </div>\n    \n      <p><strong>ID:</strong>\n  <a href=\"#\" onclick=\"switchToNestedTab('SDA','sda-4') \">\n  <span property=dc:identifier>4</span></a></p>\n      <p><strong>Name: </strong><span property=rdfs:label>Interruption of pump (0)</span></p><p property=rdfs:comment><strong>Description: </strong>The watchdog timer shall interrupt the pump if it ceases/suspends normal operation, or does not respond to user input for 90 seconds (1)</p>\n      \n    </div>\n  </div>\n\n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasImplementationManifest\" typeof=\"riskman:ImplementationManifest\" >\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Implementation Manifest</h3>\n          <span class=\"info-icon\" data-name=\"ImplementationManifest\">\n          ℹ️\n          <span class=\"tooltip\">A concrete piece of objective evidence (or a reference to such) that an SDA has been implemented, e.g. reference to a line of code or a particular section in the device manual.</span>\n          </span>\n      </div>\n    \n      \n      <p><strong>Name: </strong>Interruption report (0)</p>\n      \n    </div>\n  </div>\n\n    </div>\n  </div>\n\n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasSubSDA\" typeof=\"riskman:SDA\" >\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Sub SDA</h3>\n          <span class=\"info-icon\" data-name=\"SubSDA\">\n          ℹ️\n          <span class=\"tooltip\">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>\n          </span>\n      </div>\n    \n      \n      \n      \n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:\" typeof=\"riskman:\" resource=#5>\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">SDA</h3>\n          <span class=\"info-icon\" data-name=\"SDA\">\n          ℹ️\n          <span class=\"tooltip\">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>\n          </span>\n      </div>\n    \n      <p><strong>ID:</strong>\n  <a href=\"#\" onclick=\"switchToNestedTab('SDA','sda-5') \">\n  <span property=dc:identifier>5</span></a></p>\n      <p><strong>Name: </strong><span property=rdfs:label>Response check (0)</span></p><p property=rdfs:comment><strong>Description: </strong>The watchdog timer shall check that each of the other tasks has responded within the last 90 seconds (1)</p>\n      \n    </div>\n  </div>\n\n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasImplementationManifest\" typeof=\"riskman:ImplementationManifest\" >\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Implementation Manifest</h3>\n          <span class=\"info-icon\" data-name=\"ImplementationManifest\">\n          ℹ️\n          <span class=\"tooltip\">A concrete piece of objective evidence (or a reference to such) that an SDA has been implemented, e.g. reference to a line of code or a particular section in the device manual.</span>\n          </span>\n      </div>\n    \n      \n      <p><strong>Name: </strong>Response report (0)</p>\n      \n    </div>\n  </div>\n\n    </div>\n  </div>\n\n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasSubSDA\" typeof=\"riskman:SDA\" >\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Sub SDA</h3>\n          <span class=\"info-icon\" data-name=\"SubSDA\">\n          ℹ️\n          <span class=\"tooltip\">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>\n          </span>\n      </div>\n    \n      \n      \n      \n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:\" typeof=\"riskman:\" resource=#6>\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">SDA</h3>\n          <span class=\"info-icon\" data-name=\"SDA\">\n          ℹ️\n          <span class=\"tooltip\">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>\n          </span>\n      </div>\n    \n      <p><strong>ID:</strong>\n  <a href=\"#\" onclick=\"switchToNestedTab('SDA','sda-6') \">\n  <span property=dc:identifier>6</span></a></p>\n      <p><strong>Name: </strong><span property=rdfs:label>Alarm (0)</span></p><p property=rdfs:comment><strong>Description: </strong>If any task does not respond to a watchdog test for more than 3 minutes, a Watchdog alarm shall be raised (1)</p>\n      \n    </div>\n  </div>\n\n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasImplementationManifest\" typeof=\"riskman:ImplementationManifest\" >\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Implementation Manifest</h3>\n          <span class=\"info-icon\" data-name=\"ImplementationManifest\">\n          ℹ️\n          <span class=\"tooltip\">A concrete piece of objective evidence (or a reference to such) that an SDA has been implemented, e.g. reference to a line of code or a particular section in the device manual.</span>\n          </span>\n      </div>\n    \n      \n      <p><strong>Name: </strong>Alarm report (0)</p>\n      \n    </div>\n  </div>\n\n    </div>\n  </div>\n\n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasSubSDA\" typeof=\"riskman:SDA\" >\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Sub SDA</h3>\n          <span class=\"info-icon\" data-name=\"SubSDA\">\n          ℹ️\n          <span class=\"tooltip\">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>\n          </span>\n      </div>\n    \n      \n      \n      \n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:\" typeof=\"riskman:\" resource=#7>\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">SDA</h3>\n          <span class=\"info-icon\" data-name=\"SDA\">\n          ℹ️\n          <span class=\"tooltip\">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>\n          </span>\n      </div>\n    \n      <p><strong>ID:</strong>\n  <a href=\"#\" onclick=\"switchToNestedTab('SDA','sda-7') \">\n  <span property=dc:identifier>7</span></a></p>\n      <p><strong>Name: </strong><span property=rdfs:label>Test (0)</span></p><p property=rdfs:comment><strong>Description: </strong>A watchdog test shall be performed by calling a low-level driver and shall generate a Watchdog Test Failure alarm upon failure (1)</p>\n      \n    </div>\n  </div>\n\n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasImplementationManifest\" typeof=\"riskman:ImplementationManifest\" >\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Implementation Manifest</h3>\n          <span class=\"info-icon\" data-name=\"ImplementationManifest\">\n          ℹ️\n          <span class=\"tooltip\">A concrete piece of objective evidence (or a reference to such) that an SDA has been implemented, e.g. reference to a line of code or a particular section in the device manual.</span>\n          </span>\n      </div>\n    \n      \n      <p><strong>Name: </strong>Test report (0)</p>\n      \n    </div>\n  </div>\n\n    </div>\n  </div>\n\n    </div>\n  </div>\n\n    </div>\n  </div>\n\n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasSubSDA\" typeof=\"riskman:SDA\" >\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Sub SDA</h3>\n          <span class=\"info-icon\" data-name=\"SubSDA\">\n          ℹ️\n          <span class=\"tooltip\">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>\n          </span>\n      </div>\n    \n      \n      \n      \n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:\" typeof=\"riskman:\" resource=#->\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">SDA</h3>\n          <span class=\"info-icon\" data-name=\"SDA\">\n          ℹ️\n          <span class=\"tooltip\">Reusable artifact embodying or expressing one possible method or approach to risk control.</span>\n          </span>\n      </div>\n    \n      \n      <p><strong>Name: </strong><span property=rdfs:label>Conformity to IEC 60601-2-24 (0)</span></p><p property=rdfs:comment><strong>Description: </strong>The pump shall be developed such that the basic safety and essential performance requirements, specified in IEC 60601-2-24, are met (0)</p>\n      \n    </div>\n  </div>\n\n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasSafetyAssurance\" typeof=\"riskman:SafetyAssurance\" resource=#->\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Safety Assurance</h3>\n          <span class=\"info-icon\" data-name=\"SafetyAssurance\">\n          ℹ️\n          <span class=\"tooltip\">A credible reference (or list of such) to the state of the art of achieving safety with respect to a certain class of hazards, e.g. referring to an international norm such as ISO 60601.</span>\n          </span>\n      </div>\n    \n      \n      <p><strong>Name: </strong><span property=rdfs:label>IEC 60601-2-24 (0)</span></p>\n      \n    </div>\n  </div>\n\n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasImplementationManifest\" typeof=\"riskman:ImplementationManifest\" resource=#->\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Implementation Manifest</h3>\n          <span class=\"info-icon\" data-name=\"ImplementationManifest\">\n          ℹ️\n          <span class=\"tooltip\">A concrete piece of objective evidence (or a reference to such) that an SDA has been implemented, e.g. reference to a line of code or a particular section in the device manual.</span>\n          </span>\n      </div>\n    \n      \n      <p><strong>Name: </strong><span property=rdfs:label>Instructions for use (0)</span></p>\n      \n    </div>\n  </div>\n\n    </div>\n  </div>\n\n    </div>\n  </div>\n\n          \n  <div class=\"card\">\n    <div class=\"card-body\" property=\"riskman:hasResidualRiskLevel\" typeof=\"riskman:RiskLevel\" >\n      \n    <div class=\"card-title\" >\n          <h3 style=\"margin-right: 10px;\">Residual Risk</h3>\n          <span class=\"info-icon\" data-name=\"ResidualRisk\">\n          ℹ️\n          <span class=\"tooltip\">The original, mitigated risk with lowered value(s) of probability and/or severity.</span>\n          </span>\n      </div>\n    \n      \n      <p><strong>Probability: </strong><span property=riskman:hasProbability typeof=riskman:Probability>1</span></p><p><strong>Severity: </strong><span property=riskman:hasSeverity typeof=riskman:Severity>3</span></p>\n      \n    </div>\n  </div>\n\n        </div>\n      </div>\n    "};
+  function showModal(id) {
+    const modal = document.getElementById('myModal');
+    const modalDetails = document.getElementById('modal-details');
+    // Retrieve the details HTML from the array
+    modalDetails.innerHTML = detailsArray[id] || 'Details not found';
+    modal.style.display = 'block';
+  }
+
+    function closeModal() {
+      const modal = document.getElementById('myModal');
+      modal.style.display = 'none';
+    }
+
+    // Close the modal when the user clicks anywhere outside of it
+    window.onclick = function(event) {
+      const modal = document.getElementById('myModal');
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    }
+  
+            //switch to nested tabs
+            function switchToNestedTab(elementType,id) {
+              const nestedTabIndex = mapElementTypeToTabIndex(elementType);
+              switchToMainTabContainingNestedTabs();
+              const nestedTab = document.getElementById(`nestedTab${nestedTabIndex}`);
+              if (nestedTab) {
+                nestedTab.click();
+                setTimeout(() => {
+                  highlightElementInTab(id);
+              }, 50);
+              }
+
+            }
+
+
+            function highlightElementInTab(id) {
+              deleteAllHighlightings()
+              const rowToHighlight = document.getElementById(id);
+              if (rowToHighlight) {
+                  rowToHighlight.classList.add('highlighted-row');
+                  rowToHighlight.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              }
+          }
+
+          function deleteAllHighlightings() {
+            document.querySelectorAll('.highlighted-row').forEach(row => {
+                row.classList.remove('highlighted-row');
+            });
+        }
+
+            function mapElementTypeToTabIndex(elementType) {
+              const mapping = {
+                'DSH': 0,
+                'Hazard': 1,
+                'DeviceFunction': 2,
+                'DeviceComponent': 3,
+                'HS': 4,
+                'Event': 5,
+                'Harm': 6,
+                'Context': 7,
+                'RiskSDA': 8,
+                'SubAssuranceSDA': 9,
+                'SafetyAssurance': 10,
+                'ImplementationManifest': 11,
+              };
+              return mapping[elementType] || 0;
+            }
+
+            function switchToMainTabContainingNestedTabs() {
+              const mainTab = document.getElementById('tab2');
+              mainTab.click();
+            }
+
+        </script>
+        </body>
+    
+        </html>
+      
